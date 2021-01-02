@@ -28,17 +28,12 @@ class PagesController extends Controller
     public function store(ContactRequest $request){
         
       $message = Message::create($request->only('name', 'email', 'message'));
-      $message->name = $request->name;
-      $message->email = $request->email;
-      $message->message = $request->message;
-      $message->save();
       
-      $mailable = new ContactMessageCreated($message);
-      Mail::to(config('laracarte.admin_support_email'))->send($mailable);
+      Mail::to(config('laracarte.admin_support_email'))
+            ->send(new ContactMessageCreated($message));
 
       return redirect('contact')->with('message', 'Votre messsage a bien été envoyé.');
 
-      return 'Done!';
     }
 
 }
